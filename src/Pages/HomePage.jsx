@@ -1,60 +1,11 @@
-import React, { useState } from "react";
-import Hero from "../Components/UI/Hero";
+import React from "react";
 import ServicePage from "../Pages/ServicePage";
 import BookingImage from "../assets/images/fastboooking.jpg";
 import safeImage from "../assets/images/safedrive.webp";
 import affordableImage from "../assets/images/image1.jpg";
 import Footer from "../Components/UI/Footer";
-import FareCalculator from "../Components/fareCalculator/FareCalculator";
-import Loader from "../Components/UI/Loader";
 
 export default function HomePage() {
-  const [pickupLocation, setPickupLocation] = useState(null);
-  const [dropLocation, setDropLocation] = useState(null);
-  const [distanceKm, setDistanceKm] = useState(null);
-  const [loading, setLoading] = useState(false); 
-
-  const handleBookRide = () => {
-    if (!pickupLocation || !dropLocation) {
-      alert("Please enter both pickup and drop locations!");
-      return;
-    }
-    setLoading(true); 
-    setTimeout(() => {
-      fetchDistance(pickupLocation, dropLocation);
-      setLoading(false); 
-    }, 2000); 
-  };
-
-  const fetchDistance = (pickup, drop) => {
-    if (!window.google || !window.google.maps) {
-      alert("Google Maps SDK not loaded.");
-      return;
-    }
-    const service = new window.google.maps.DirectionsService();
-    service.route(
-      {
-        origin: pickup,
-        destination: drop,
-        travelMode: window.google.maps.TravelMode.DRIVING,
-      },
-      (result, status) => {
-        if (status === "OK") {
-          const meters = result.routes[0].legs[0].distance.value;
-          const km = meters / 1000;
-          setDistanceKm(km);
-        } else {
-          alert("Could not calculate distance.");
-        }
-      }
-    );
-  };
-
-  const handleClearInputs = () => {
-    setPickupLocation(null);
-    setDropLocation(null);
-  };
-
   const ShapeDivider = ({ fill = "#ffffff", flip = false }) => (
     <div
       className={`w-full overflow-hidden leading-[0] ${
@@ -78,33 +29,8 @@ export default function HomePage() {
   return (
     <>
       <div className="font-sans">
-        {loading && (
-                       <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/100">
-                           <Loader />
-                       </div>
-                   )}
-        <Hero
-          title="India Moves On Safari "
-          subtitle="Book your taxi or bike ride in seconds. Fast, safe, and reliable."
-          pickupPlaceholder={`Your location${
-            location.city ? ` (${location.city})` : ""
-          }`}
-          dropPlaceholder={`Drop-off location${
-            location.city ? ` near ${location.city}` : ""
-          }`}
-          buttonText="Book a Ride"
-          onBookRide={handleBookRide}
-          onPickupChange={setPickupLocation}
-          onDropChange={setDropLocation}
-        />
-
-        {!loading && distanceKm && (
-          <FareCalculator distanceKm={distanceKm} onClear={handleClearInputs} />
-        )}
-
         <section className="relative bg-[#FDF3E7] mt-12">
           <ShapeDivider fill="#ffffff" />
-
           <div className="py-16 px-4 text-center bg-[#FDF3E7] ">
             <div className="max-w-7xl mx-auto">
               <h2
@@ -120,7 +46,6 @@ export default function HomePage() {
                 Affordable fares, real-time tracking, and seamless payments — your
                 trusted ride partner!
               </p>
-
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className=" overflow-hidden transition duration-300 max-w-[300px] mx-auto">
                   <img
@@ -137,7 +62,6 @@ export default function HomePage() {
                     </p>
                   </div>
                 </div>
-
                 <div className="overflow-hidden max-w-[300px] mx-auto">
                   <img
                     src={safeImage}
@@ -154,7 +78,6 @@ export default function HomePage() {
                     </p>
                   </div>
                 </div>
-
                 <div className="overflow-hidden max-w-[300px] mx-auto">
                   <img
                     src={affordableImage}

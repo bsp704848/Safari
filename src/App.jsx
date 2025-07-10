@@ -6,6 +6,7 @@ import HomePage from "./Pages/HomePage"
 import AboutPage from "./Pages/AboutPage"
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import RiderPage from "./Pages/RiderPage"
+import RideBooking from "./Pages/RideBooking"
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />}/>
         <Route path="/about" element={<AboutPage />}/>
         <Route path="/rider" element={<RiderPage />}/>
+        <Route path="/book-ride" element={<RideBooking />}/>
       </Routes>
       <Toaster
         position="top-center"
