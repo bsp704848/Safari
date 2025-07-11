@@ -1,11 +1,43 @@
-import React from "react";
+import React, { useEffect, useState,useRef,forwardRef, useImperativeHandle } from "react";
+import axios from "axios";
+import { useLocation } from "react-router-dom";
 import ServicePage from "../Pages/ServicePage";
-import BookingImage from "../assets/images/fastboooking.jpg";
-import safeImage from "../assets/images/safedrive.webp";
-import affordableImage from "../assets/images/image1.jpg";
-import Footer from "../Components/UI/Footer";
 
-export default function HomePage() {
+
+
+const HomePage = forwardRef((props, ref) => {
+    const serviceRef = useRef(null);
+  const location = useLocation();
+  const [sectionData, setSectionData] = useState(null); 
+
+    useImperativeHandle(ref, () => ({
+    scrollToService: () => {
+      if (serviceRef.current) {
+        serviceRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }));
+
+  useEffect(() => {
+    axios.get(`${import.meta.env.VITE_API_BASE_URL}/home`) 
+    .then(res => {
+      
+      setSectionData(res.data)})
+      .catch(err => console.error("Failed to load home section", err));
+  }, []);
+  
+    
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get("section") === "service" && serviceRef.current) {
+      serviceRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [location, sectionData]);
+
+  
+  if (!sectionData) return <div className="text-center p-10">Loading...</div>;
+
+  
   const ShapeDivider = ({ fill = "#ffffff", flip = false }) => (
     <div
       className={`w-full overflow-hidden leading-[0] ${
@@ -13,7 +45,7 @@ export default function HomePage() {
       }`}
     >
       <svg
-        className="block w-[300%] h-[83px] relative"
+        className="block w-[300%] h-[25px] relative"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 1200 120"
         preserveAspectRatio="none"
@@ -29,9 +61,9 @@ export default function HomePage() {
   return (
     <>
       <div className="font-sans">
-        <section className="relative bg-[#FDF3E7] mt-12">
+        <section className="relative bg-[#FBF3B9] ">
           <ShapeDivider fill="#ffffff" />
-          <div className="py-16 px-4 text-center bg-[#FDF3E7] ">
+          <div className="py-16 px-4 text-center bg-[#FBF3B9] ">
             <div className="max-w-7xl mx-auto">
               <h2
                 className="text-3xl md:text-4xl font-bold mb-6 text-center text-black"
@@ -39,69 +71,37 @@ export default function HomePage() {
                   textShadow: `0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green`,
                 }}
               >
-                Why Choose Safari?
+                 {sectionData.sectionTitle}
               </h2>
               <p className="text-gray-900 max-w-2xl mx-auto mb-12 text-center">
-                Safari App lets you book taxis or bikes in just a few taps.
-                Affordable fares, real-time tracking, and seamless payments — your
-                trusted ride partner!
+                {sectionData.subtitle}
               </p>
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className=" overflow-hidden transition duration-300 max-w-[300px] mx-auto">
-                  <img
-                    src={BookingImage}
-                    alt="Fast Booking"
-                    className="w-full h-48  rounded-2xl object-cover transform transition-transform duration-500 hover:scale-105"
-                  />
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-2 text-gray-900">
-                      Fast Booking
-                    </h3>
-                    <p className="text-gray-600 text-sm">
-                      Book rides instantly without long waits or complicated steps.
-                    </p>
-                  </div>
+                 {sectionData.cards.map((card, idx) => (
+              <div key={idx} className="max-w-[300px] mx-auto">
+                <img
+                  src={card.image}
+                  alt={card.title}
+                  className="w-full h-48 rounded-2xl object-cover hover:scale-105 transition-transform"
+                />
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold mb-2 text-gray-900">{card.title}</h3>
+                  <p className="text-gray-600 text-sm">{card.description}</p>
                 </div>
-                <div className="overflow-hidden max-w-[300px] mx-auto">
-                  <img
-                    src={safeImage}
-                    alt="Safe Rides"
-                    className="w-full h-48  rounded-2xl object-cover transform transition-transform duration-500 hover:scale-105"
-                  />
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-2 text-gray-900">
-                      Safe Rides
-                    </h3>
-                    <p className="text-gray-600 text-sm">
-                      Our drivers are verified and our rides are tracked for your
-                      safety.
-                    </p>
-                  </div>
-                </div>
-                <div className="overflow-hidden max-w-[300px] mx-auto">
-                  <img
-                    src={affordableImage}
-                    alt="Affordable Prices"
-                    className="w-full h-48 rounded-2xl object-cover transform transition-transform duration-500 hover:scale-105"
-                  />
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-2 text-gray-900">
-                      Affordable Prices
-                    </h3>
-                    <p className="text-gray-600 text-sm">
-                      Enjoy competitive rates for both taxi and bike rides around
-                      town.
-                    </p>
-                  </div>
-                </div>
+              </div>
+            ))}
               </div>
             </div>
           </div>
           <ShapeDivider fill="#ffffff" flip />
         </section>
       </div>
-      <ServicePage />
-      <Footer />
+      <div ref={serviceRef}>
+        <ServicePage />
+      </div>
     </>
   );
-}
+});
+
+export default HomePage;

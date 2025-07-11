@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Menu, X,ChevronDown } from "lucide-react"; 
+import { Menu, X, ChevronDown } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthStore";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function Navbar() {
+export default function Navbar({ onServiceClick }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const user = useAuthStore((state) => state.user)
@@ -11,15 +11,25 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout();   
+    logout();
     setDropdownOpen(false);
     navigate("/login");
   };
 
   const navItems = [
-    { name: "About Us", href: "/about" },
-    { name: "Safety", href: "#" },
+    {
+      name: "Service",
+      href: "#",
+      onClick: () => {
+        if (window.location.pathname === "/") {
+          onServiceClick?.();
+        } else {
+          navigate("/?section=service");
+        }
+      },
+    },
     { name: "Contact Us", href: "#" },
+    { name: "About Us", href: "/about" },
     { name: "Book a ride", href: "/book-ride" },
   ];
 
@@ -27,24 +37,30 @@ export default function Navbar() {
     <nav className="bg-white w-full z-50 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
-      
+
           <div className="flex-shrink-0 text-2xl font-bold text-black bg-yellow-300 rounded-full px-4 py-1 hover:cursor-pointer"
             onClick={() => navigate("/")}>
             Safari
           </div>
 
-     
+
           <div className="hidden md:flex space-x-8 ">
             {navItems.map((item) => (
               <a
-              key={item.name}
-              href={item.href}
-              className="text-gray-700 hover:text-green-700 font-medium transition-colors"
+                key={item.name}
+                href={item.href}
+                onClick={(e) => {
+                  if (item.onClick) {
+                    e.preventDefault();
+                    item.onClick();
+                  }
+                }}
+                className="text-gray-700 hover:text-green-700 font-medium transition-colors"
               >
                 {item.name}
               </a>
             ))}
-               {user ? (
+            {user ? (
               <div className="relative">
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -98,64 +114,70 @@ export default function Navbar() {
         </div>
       </div>
 
-     
+
       {mobileMenuOpen && (
-  <div className="md:hidden bg-white shadow-lg">
-    <div className="px-4 py-3 space-y-2">
-      {navItems.map((item) => (
-        <a
-          key={item.name}
-          href={item.href}
-          className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-green-50 hover:text-green-700 transition"
-        >
-          {item.name}
-        </a>
-      ))}
+        <div className="md:hidden bg-white shadow-lg">
+          <div className="px-4 py-3 space-y-2">
+            {navItems.map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                onClick={(e) => {
+                  if (item.onClick) {
+                    e.preventDefault();
+                    setMobileMenuOpen(false);
+                    item.onClick();
+                  }
+                }}
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-green-50 hover:text-green-700 transition"
+              >
+                {item.name}
+              </a>
+            ))}
 
-      {user ? (
-        <div className="border-t border-gray-200 pt-2">
-        
-          <button
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="flex justify-between items-center w-full text-gray-700 px-3 py-2 rounded-md hover:bg-gray-100 font-medium"
-          >
-            <span>Welcome, {user.username}</span>
-            <ChevronDown
-              className={`w-4 h-4 ml-2 transition-transform duration-200 ${
-                dropdownOpen ? "rotate-180" : ""
-              }`}
-            />
-          </button>
+            {user ? (
+              <div className="border-t border-gray-200 pt-2">
 
-         
-          {dropdownOpen && (
-            <button
-              onClick={handleLogout}
-              className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
-            >
-              Logout
-            </button>
-          )}
-        </div>
-      ) : (
-        <div className="flex flex-col gap-2 border-t border-gray-200 pt-2">
-          <Link
-            to="/login"
-            className="block w-full px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
-          >
-            Login
-          </Link>
-          <Link
-            to="/register"
-            className="block w-full px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
-          >
-            Register
-          </Link>
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="flex justify-between items-center w-full text-gray-700 px-3 py-2 rounded-md hover:bg-gray-100 font-medium"
+                >
+                  <span>Welcome, {user.username}</span>
+                  <ChevronDown
+                    className={`w-4 h-4 ml-2 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""
+                      }`}
+                  />
+                </button>
+
+
+                {dropdownOpen && (
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                  >
+                    Logout
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2 border-t border-gray-200 pt-2">
+                <Link
+                  to="/login"
+                  className="block w-full px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  className="block w-full px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                >
+                  Register
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       )}
-    </div>
-  </div>
-)}
 
     </nav>
   );

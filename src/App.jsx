@@ -1,4 +1,4 @@
-import Navbar from "./Components/UI/Navbar"
+import React,{useRef} from 'react'
 import { Toaster } from 'react-hot-toast'
 import LoginPage from "./Pages/LoginPage"
 import RegisterPage from "./Pages/RegisterPage"
@@ -7,20 +7,24 @@ import AboutPage from "./Pages/AboutPage"
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import RiderPage from "./Pages/RiderPage"
 import RideBooking from "./Pages/RideBooking"
+import Mainlayout from "./Components/UI/Mainlayout"
 
 function App() {
+   const homePageRef = useRef(null);
 
+  const handleScrollToService = () => {
+    homePageRef.current?.scrollToService();
+  };
 
   return (
     <Router>
-      <Navbar />
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<Mainlayout scrollToService={handleScrollToService}><HomePage  ref={homePageRef} /></Mainlayout>} />
         <Route path="/login" element={<LoginPage />}/>
         <Route path="/register" element={<RegisterPage />}/>
-        <Route path="/about" element={<AboutPage />}/>
-        <Route path="/rider" element={<RiderPage />}/>
-        <Route path="/book-ride" element={<RideBooking />}/>
+        <Route path="/about" element={<Mainlayout scrollToService={handleScrollToService}><AboutPage /></Mainlayout>}/>
+        <Route path="/rider" element={<Mainlayout scrollToService={handleScrollToService}><RiderPage /></Mainlayout>}/>
+        <Route path="/book-ride" element={<Mainlayout scrollToService={handleScrollToService}><RideBooking /></Mainlayout>}/>
       </Routes>
       <Toaster
         position="top-center"
