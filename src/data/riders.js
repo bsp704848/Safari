@@ -1,5 +1,3 @@
-import { Contact } from "lucide-react";
-
 export const RIDERS = [
   {
     id: 1,

@@ -3,6 +3,7 @@ import Loader from "../Components/UI/Loader";
 import FareCalculator from "../Components/fareCalculator/FareCalculator";
 import backgroundImage from "../assets/images/background.png";
 import { MapPin, LocateFixed } from "lucide-react";
+import GoogleMapView from "../Components/UI/GoogleMapView";
 
 export default function RideBooking() {
   const [pickupQuery, setPickupQuery] = useState("");
@@ -13,6 +14,8 @@ export default function RideBooking() {
   const [dropLocation, setDropLocation] = useState(null);
   const [distanceKm, setDistanceKm] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [routePolyline, setRoutePolyline] = useState(null);
+
 
   const pickupDebounceRef = useRef();
   const dropDebounceRef = useRef();
@@ -111,6 +114,13 @@ export default function RideBooking() {
           const meters = result.routes[0].legs[0].distance.value;
           const km = meters / 1000;
           setDistanceKm(km);
+
+          const polyline = result.routes[0].overview_polyline?.points;
+          if (polyline) {
+            console.log("Polyline",polyline);
+            
+            setRoutePolyline(polyline);
+          }
         } else {
           alert("Could not calculate distance.");
         }
@@ -134,26 +144,26 @@ export default function RideBooking() {
         </div>
       )}
       <section
-        className="relative text-black min-h-[60vh] flex flex-col justify-center items-center text-center px-4"
+        className="relative text-black min-h-[60vh] flex justify-center items-center text-center px-4"
         style={{
           backgroundImage: `url(${backgroundImage})`,
           backgroundSize: "contain",
           backgroundPosition: "center",
         }}
       >
-        <div className="relative z-10 max-w-2xl w-full">
-          <h1 className="text-4xl md:text-6xl font-extrabold mb-6"
-            style={{
-              textShadow: `0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green`
-            }}
-          >
-            India Moves On Safari
-          </h1>
-          <p className="text-lg md:text-xl mb-8">
-            Book your taxi or bike ride in seconds. Fast, safe, and reliable.
-          </p>
-          <div className="flex flex-col md:flex-row gap-4 mb-6 w-full">
-            <div className="relative flex-1">
+        <div className="relative z-10  max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-10">
+          <div className="flex flex-col justify-center items-center md:items-start text-center md:text-left w-full">
+            <h1 className="text-3xl md:text-5xl font-extrabold mb-6"
+              style={{
+                textShadow: `0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green`
+              }}
+            >
+              India Moves On Safari
+            </h1>
+            <p className="text-lg md:text-xl mb-8">
+              Book your taxi or bike ride in seconds. Fast, safe, and reliable.
+            </p>
+            <div className="relative w-full mb-4">
               <div className="relative flex items-center gap-2 bg-white rounded-full px-4 py-3 border border-gray-900">
                 <MapPin className="text-orange-600 w-5 h-5" />
                 <input
@@ -194,7 +204,7 @@ export default function RideBooking() {
                 </ul>
               )}
             </div>
-            <div className="relative flex-1">
+            <div className="relative w-full mb-8">
               <div className="relative flex items-center gap-2 bg-white rounded-full px-4 py-3 border border-gray-900">
                 <LocateFixed className="text-orange-600 w-5 h-5" />
                 <input
@@ -235,13 +245,20 @@ export default function RideBooking() {
                 </ul>
               )}
             </div>
+            <button
+              onClick={handleBookRide}
+              className="bg-gray-900 text-white font-medium py-3 px-8 rounded-lg hover:rounded-full transition-all duration-300 ease-in-out shadow-lg"
+            >
+              Book a Ride
+            </button>
           </div>
-          <button
-            onClick={handleBookRide}
-            className="bg-gray-900 text-white font-medium py-3 px-8 rounded-lg hover:rounded-full transition-all duration-300 ease-in-out shadow-lg"
-          >
-            Book a Ride
-          </button>
+          <div className="w-full h-[400px] md:h-full">
+            <GoogleMapView
+              pickupLocation={pickupLocation}
+              dropLocation={dropLocation}
+              routePolyline={routePolyline}
+            />
+          </div>
         </div>
       </section>
       {!loading && distanceKm && (
