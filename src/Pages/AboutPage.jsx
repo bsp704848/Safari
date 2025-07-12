@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Carousel from "../Components/UI/Carousel";
 
 
 export default function AboutPage() {
 
   const [data, setData] = useState(null);
-  
 
-    useEffect(() => {
+
+  useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_API_BASE_URL}/about`)
       .then((res) => setData(res.data))
@@ -18,11 +19,10 @@ export default function AboutPage() {
 
 
 
-   const ShapeDivider = ({ fill = "#ffffff", flip = false }) => (
+  const ShapeDivider = ({ fill = "#ffffff", flip = false }) => (
     <div
-      className={`w-full overflow-hidden leading-[0] ${
-        flip ? "rotate-180" : ""
-      }`}
+      className={`w-full overflow-hidden leading-[0] ${flip ? "rotate-180" : ""
+        }`}
     >
       <svg
         className="block w-[300%] h-[25px] relative"
@@ -39,7 +39,7 @@ export default function AboutPage() {
   );
 
   return (
-    <div className="bg-[#FBF3B9] text-gray-900">
+    <div className="bg-[#abffcc] text-gray-900">
       <ShapeDivider fill="#ffffff" />
       <div className=" text-gray-900">
         <div className="max-w-6xl mx-auto px-4 py-16 text-center">
@@ -50,18 +50,18 @@ export default function AboutPage() {
                 "0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green",
             }}
           >
-          {data.pageTitle}
+            {data.pageTitle}
           </h1>
           <p className="text-lg md:text-xl mb-4">
-           {data.subtitle}
+            {data.subtitle}
           </p>
           <p className="text-md md:text-lg max-w-3xl mx-auto">
-           {data.description}
+            {data.description}
           </p>
         </div>
       </div>
 
-      <div className="bg-[#FBF3B9] text-gray-900">
+      <div className="bg-[#abffcc] text-gray-900">
         <div className="max-w-6xl mx-auto px-4 py-16">
           <h2
             className="text-3xl md:text-5xl font-bold mb-8 text-center"
@@ -73,16 +73,16 @@ export default function AboutPage() {
             Why Safari?
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
-           {data.whySafari.map((item, idx) => (
-            <div key={idx} className="bg-[#f1f6e9] p-6 rounded-xl shadow-md hover:scale-105 transition-transform">
-              <h3 className="text-xl font-bold mb-3">{item.title}</h3>
-              <p>{item.description}</p>
-            </div>
-          ))}</div>
+            {data.whySafari.map((item, idx) => (
+              <div key={idx} className="bg-[#f1f6e9] p-6 rounded-xl hover:scale-105 transition-transform">
+                <h3 className="text-xl font-bold mb-3">{item.title}</h3>
+                <p>{item.description}</p>
+              </div>
+            ))}</div>
         </div>
       </div>
 
-      <div className="bg-[#FBF3B9]">
+      <div className="bg-[#abffcc]">
         <section className="max-w-6xl mx-auto px-4 py-16">
           <h2
             className="text-3xl md:text-5xl font-bold mb-8 text-center"
@@ -93,18 +93,29 @@ export default function AboutPage() {
           >
             Our Success Stories
           </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-          {data.successStories.map((story, idx) => (
-              <div key={idx} className="bg-white text-black p-6 rounded-xl shadow-md hover:scale-105 transition-transform">
-                <img src={story.photo} alt={story.name} className="w-24 h-24 rounded-full mx-auto mb-4" />
+          <Carousel
+            items={data.successStories || []}
+            slidesPerView={3}
+            renderItem={(story) => (
+              <div className="bg-white text-black p-6 hover:scale-105 transition-transform h-full flex flex-col  items-center justify-center rounded-tr-2xl rounded-bl-2xl border-r-8 border-b-8 border-gray-200" >
+                <img
+                  src={story.photo}
+                  alt={story.name}
+                  className="w-24 h-24 rounded-full mx-auto mb-4 object-cover"
+                />
                 <h3 className="text-lg font-bold text-center mb-2">{story.name}</h3>
                 <p className="text-center text-sm">“{story.quote}”</p>
               </div>
-            ))} </div>
+            )}
+            showButtons={false}
+            autoplay={true}
+            autoplayDelay={2000}
+          />
+
         </section>
       </div>
 
-      <div className="bg-[#FBF3B9]">
+      <div className="bg-[#abffcc]">
         <section className="max-w-6xl mx-auto px-4 py-16">
           <h2
             className="text-3xl md:text-5xl font-bold mb-8 text-center"
@@ -117,8 +128,8 @@ export default function AboutPage() {
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
             {data.team.map((member, idx) => (
-              <div key={idx} className="bg-white text-black p-6 rounded-xl shadow-md hover:scale-105 transition-transform">
-                <img src={member.photo} alt={member.name} className="w-24 h-24 rounded-full mx-auto mb-4 object-cover" />
+              <div key={idx} className=" text-black p-6 rounded-xl hover:scale-105 transition-transform">
+                <img src={member.photo} alt={member.name} className="w-28 h-28 rounded-full mx-auto mb-4 object-cover" />
                 <h3 className="text-lg font-bold text-center mb-2">{member.name}</h3>
                 <p className="text-center text-sm">{member.role}</p>
               </div>
@@ -126,7 +137,7 @@ export default function AboutPage() {
         </section>
       </div>
 
-      <ShapeDivider fill="#ffffff" flip  />
+      <ShapeDivider fill="#ffffff" flip />
     </div>
   );
 }

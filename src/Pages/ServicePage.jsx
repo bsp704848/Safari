@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
+import Carousel from "../Components/UI/Carousel";
 
 
 export default function ServicePage() {
 
-  const [pageData, setPageData] = useState(null);
+  const [data, setData] = useState(null);
   const navigate = useNavigate();
 
 
@@ -13,13 +14,13 @@ export default function ServicePage() {
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_API_BASE_URL}/service`)
-      .then((res) => setPageData(res.data))
+      .then((res) => setData(res.data))
       .catch((err) => console.error("Failed to fetch service page data", err));
-  }, []); 
+  }, []);
 
-  if (!pageData) {
-  return <div className="text-center p-10">Loading...</div>;
-}
+  if (!data) {
+    return <div className="text-center p-10">Loading...</div>;
+  }
 
   const ShapeDivider = ({ fill = "#ffffff", flip = false }) => (
     <div
@@ -38,7 +39,23 @@ export default function ServicePage() {
         ></path>
       </svg>
     </div>
+
   );
+
+  const renderServiceItem = (service) => (
+  <div className="flex items-center gap-4 bg-white text-black p-4 rounded-xl shadow-md hover:shadow-2xl transition duration-300 h-auto w-auto">
+    <img
+      src={service.icon}
+      alt={service.name}
+      className="w-32 h-32 object-cover rounded-lg flex-shrink-0"
+    />
+    <div className="flex flex-col justify-center">
+      <span className="text-base font-semibold mb-1">{service.name}</span>
+      <p className="text-xs text-gray-700">{service.description}</p>
+    </div>
+  </div>
+);
+
 
   return (
 
@@ -52,19 +69,13 @@ export default function ServicePage() {
               textShadow: `0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green`
             }}
           >Our Services</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8 justify-items-center">
-            {pageData?.services.map((service, idx) => (
-              <div key={idx} className="flex flex-col items-center">
-                <img
-                  src={service.icon}
-                  alt={service.name}
-                  className="w-32 h-28 mb-2 object-cover rounded-lg shadow-md hover:shadow-2xl transition-shadow duration-500"
-                />
-                <span className="text-sm md:text-base font-medium ">{service.name}</span>
-              </div>
-            ))}
-
-          </div>
+          <Carousel
+            items={data.services || []}
+            slidesPerView={2}
+            renderItem={renderServiceItem}
+            showButtons={true}
+            autoplay={false}
+          />
         </div>
       </section>
 
@@ -73,7 +84,7 @@ export default function ServicePage() {
         <ShapeDivider fill=" #ffffff" />
         <div className="bg-[#FBF3B9] py-12">
           <div className="max-w-6xl mx-auto px-4 space-y-40">
-            {pageData?.features.map((feature, idx) => (
+            {data?.features.map((feature, idx) => (
               <div
                 key={idx}
                 className={`flex flex-col md:flex-row items-center gap-8 ${idx % 2 === 1 ? "md:flex-row-reverse" : ""
