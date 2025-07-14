@@ -9,7 +9,7 @@ export default function Mainlayout({ children, scrollToService }) {
       <main className="flex-grow">
         {children}
       </main>
-      <Footer />
+      <Footer  onServiceClick={scrollToService} />
     </div>
   )
 }

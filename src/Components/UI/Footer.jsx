@@ -6,8 +6,10 @@ import {
   FaLinkedinIn,
   FaPhone,
 } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export default function Footer() {
+  const navigate = useNavigate()
   return (
     <footer className="relative bg-[#f2f4f6] text-black pt-28 pb-10 px-4">
         <div className="absolute top-0 left-0 w-full overflow-hidden leading-[0]">
@@ -22,7 +24,8 @@ export default function Footer() {
       </div>
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="md:col-span-1 flex flex-col items-start">
-          <h1 className="text-2xl font-bold mb-4 bg-yellow-300 rounded-full text-black px-4 py-2">
+          <h1 className="text-4xl font-bold mb-4 text-black px-4 py-2 hover:cursor-pointer" onClick={() => navigate("/")}
+          style={{fontFamily:'Coiny', textShadow: `0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green`}}>
             Safari
           </h1>
           <p className="text-black-200 mb-4 text-sm leading-relaxed">
@@ -36,20 +39,19 @@ export default function Footer() {
         <div>
           <h2 className="text-lg font-semibold mb-3">Company</h2>
           <ul className="space-y-2 text-black-300 text-sm">
-            <li><a href="#">About Safari</a></li>
-            <li><a href="#">Contact & Support</a></li>
-            <li><a href="#">Success History</a></li>
-            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="/about">About Safari</a></li>
+            <li><a href="/contact">Contact & Support</a></li>
+            <li><a href="/about">Success History</a></li>
+            <li><a href="/">Privacy Policy</a></li>
           </ul>
         </div>
 
         <div>
           <h2 className="text-lg font-semibold mb-3">Quick Links</h2>
           <ul className="space-y-2 text-black-300 text-sm">
-            <li><a href="#">Premium Support</a></li>
-            <li><a href="#">Our Services</a></li>
-            <li><a href="#">Know Our Team</a></li>
-            <li><a href="#">Download App</a></li>
+            <li><a href="/?section=service">Our Services</a></li>
+            <li><a href="/about">Know Our Team</a></li>
+            <li><a href="/book-ride">Book A Ride </a></li>
           </ul>
         </div>
 

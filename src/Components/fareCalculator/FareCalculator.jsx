@@ -99,7 +99,7 @@ export default function FareCalculator({ distanceKm, onClear }) {
       </div>
       <div className="text-center mt-4">
         <button
-          className="bg-gray-900 text-white text-base md:text-lg px-6 font-semibold py-3 rounded-lg hover:rounded-full transition-all duration-300 ease-in-out mt-4"
+          className="bg-gray-900 text-white text-base md:text-lg px-6 font-semibold py-3 rounded-full hover:bg-gray-700  mt-4"
           onClick={() => handleContinue(selectedVehicle)}
           disabled={!selectedVehicle}
         >

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Carousel from "../Components/UI/Carousel";
+import AOS from "aos";
 
 
 export default function AboutPage() {
@@ -14,6 +15,14 @@ export default function AboutPage() {
       .then((res) => setData(res.data))
       .catch((err) => console.error("Error loading About page", err));
   }, []);
+
+      useEffect(() => {
+        AOS.init({
+          duration: 800,
+          once: true,
+          easing: 'ease-in-out',
+        });
+      }, []);
 
   if (!data) return <div className="p-10 text-center">Loading...</div>;
 
@@ -39,7 +48,7 @@ export default function AboutPage() {
   );
 
   return (
-    <div className="bg-[#abffcc] text-gray-900">
+    <div className="bg-[#fbf3b9] text-gray-900">
       <ShapeDivider fill="#ffffff" />
       <div className=" text-gray-900">
         <div className="max-w-6xl mx-auto px-4 py-16 text-center">
@@ -49,19 +58,19 @@ export default function AboutPage() {
               textShadow:
                 "0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green",
             }}
-          >
+           data-aos="fade-up">
             {data.pageTitle}
           </h1>
-          <p className="text-lg md:text-xl mb-4">
+          <p className="text-lg md:text-xl mb-4" data-aos="fade-up">
             {data.subtitle}
           </p>
-          <p className="text-md md:text-lg max-w-3xl mx-auto">
+          <p className="text-md md:text-lg max-w-3xl mx-auto" data-aos="fade-up">
             {data.description}
           </p>
         </div>
       </div>
 
-      <div className="bg-[#abffcc] text-gray-900">
+      <div className="bg-[#fbf3b9] text-gray-900">
         <div className="max-w-6xl mx-auto px-4 py-16">
           <h2
             className="text-3xl md:text-5xl font-bold mb-8 text-center"
@@ -69,10 +78,10 @@ export default function AboutPage() {
               textShadow:
                 "0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green",
             }}
-          >
+           data-aos="fade-up">
             Why Safari?
           </h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8"  data-aos="fade-up">
             {data.whySafari.map((item, idx) => (
               <div key={idx} className="bg-[#f1f6e9] p-6 rounded-xl hover:scale-105 transition-transform">
                 <h3 className="text-xl font-bold mb-3">{item.title}</h3>
@@ -82,7 +91,7 @@ export default function AboutPage() {
         </div>
       </div>
 
-      <div className="bg-[#abffcc]">
+      <div className="bg-[#fbf3b9]">
         <section className="max-w-6xl mx-auto px-4 py-16">
           <h2
             className="text-3xl md:text-5xl font-bold mb-8 text-center"
@@ -90,14 +99,14 @@ export default function AboutPage() {
               textShadow:
                 "0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green",
             }}
-          >
+           data-aos="fade-up">
             Our Success Stories
           </h2>
           <Carousel
             items={data.successStories || []}
             slidesPerView={3}
             renderItem={(story) => (
-              <div className="bg-white text-black p-6 hover:scale-105 transition-transform h-full flex flex-col  items-center justify-center rounded-tr-2xl rounded-bl-2xl border-r-8 border-b-8 border-gray-200" >
+              <div className="bg-white text-black p-6 hover:scale-105 transition-transform h-full flex flex-col  items-center justify-center rounded-tr-2xl rounded-bl-2xl border-r-8 border-b-8 border-black" >
                 <img
                   src={story.photo}
                   alt={story.name}
@@ -115,7 +124,7 @@ export default function AboutPage() {
         </section>
       </div>
 
-      <div className="bg-[#abffcc]">
+      <div className="bg-[#fbf3b9]">
         <section className="max-w-6xl mx-auto px-4 py-16">
           <h2
             className="text-3xl md:text-5xl font-bold mb-8 text-center"
@@ -123,10 +132,10 @@ export default function AboutPage() {
               textShadow:
                 "0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green",
             }}
-          >
+          data-aos="fade-up" >
             Meet Our Team
           </h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8" data-aos="fade-up">
             {data.team.map((member, idx) => (
               <div key={idx} className=" text-black p-6 rounded-xl hover:scale-105 transition-transform">
                 <img src={member.photo} alt={member.name} className="w-28 h-28 rounded-full mx-auto mb-4 object-cover" />

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
 import Carousel from "../Components/UI/Carousel";
+import AOS from "aos";
 
 
 export default function ServicePage() {
@@ -17,6 +18,14 @@ export default function ServicePage() {
       .then((res) => setData(res.data))
       .catch((err) => console.error("Failed to fetch service page data", err));
   }, []);
+
+    useEffect(() => {
+      AOS.init({
+        duration: 800,
+        once: true,
+        easing: 'ease-in-out',
+      });
+    }, []);
 
   if (!data) {
     return <div className="text-center p-10">Loading...</div>;
@@ -46,12 +55,13 @@ export default function ServicePage() {
   <div className="flex items-center gap-4 bg-white text-black p-4 rounded-xl shadow-md hover:shadow-2xl transition duration-300 h-auto w-auto">
     <img
       src={service.icon}
-      alt={service.name}
+        alt={service.name}
+         data-aos="fade-up"
       className="w-32 h-32 object-cover rounded-lg flex-shrink-0"
     />
-    <div className="flex flex-col justify-center">
-      <span className="text-base font-semibold mb-1">{service.name}</span>
-      <p className="text-xs text-gray-700">{service.description}</p>
+    <div className="flex flex-col justify-center"data-aos="fade-left">
+      <span className="text-base font-bold mb-1 md:text-lg">{service.name}</span>
+      <p className="text-sm text-gray-700 font-semibold">{service.description}</p>
     </div>
   </div>
 );
@@ -90,7 +100,7 @@ export default function ServicePage() {
                 className={`flex flex-col md:flex-row items-center gap-8 ${idx % 2 === 1 ? "md:flex-row-reverse" : ""
                   }`}
               >
-                <div className="flex-1 grid grid-cols-2 gap-4">
+                <div className="flex-1 grid grid-cols-2 gap-4" data-aos="fade-up">
                   {feature.images.map((img, i) => (
                     <img
                       key={i}
@@ -100,7 +110,7 @@ export default function ServicePage() {
                     />
                   ))}
                 </div>
-                <div className="flex-1">
+                <div className="flex-1"  data-aos="fade-left">
                   <h3 className="text-xl md:text-3xl font-bold mb-4"
                     style={{
                       textShadow: `0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green`

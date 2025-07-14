@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import RiderPage from "./Pages/RiderPage"
 import RideBooking from "./Pages/RideBooking"
 import Mainlayout from "./Components/UI/Mainlayout"
+import ContactUsPage from './Pages/ContactUsPage'
 
 function App() {
    const homePageRef = useRef(null);
@@ -22,6 +23,7 @@ function App() {
         <Route path="/" element={<Mainlayout scrollToService={handleScrollToService}><HomePage  ref={homePageRef} /></Mainlayout>} />
         <Route path="/login" element={<LoginPage />}/>
         <Route path="/register" element={<RegisterPage />}/>
+        <Route path="/contact" element={<Mainlayout scrollToService={handleScrollToService}><ContactUsPage /></Mainlayout>}/>
         <Route path="/about" element={<Mainlayout scrollToService={handleScrollToService}><AboutPage /></Mainlayout>}/>
         <Route path="/rider" element={<Mainlayout scrollToService={handleScrollToService}><RiderPage /></Mainlayout>}/>
         <Route path="/book-ride" element={<Mainlayout scrollToService={handleScrollToService}><RideBooking /></Mainlayout>}/>

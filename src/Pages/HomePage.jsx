@@ -1,16 +1,16 @@
-import React, { useEffect, useState,useRef,forwardRef, useImperativeHandle } from "react";
+import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import ServicePage from "../Pages/ServicePage";
-
+import AOS from "aos";
 
 
 const HomePage = forwardRef((props, ref) => {
-    const serviceRef = useRef(null);
+  const serviceRef = useRef(null);
   const location = useLocation();
-  const [sectionData, setSectionData] = useState(null); 
+  const [sectionData, setSectionData] = useState(null);
 
-    useImperativeHandle(ref, () => ({
+  useImperativeHandle(ref, () => ({
     scrollToService: () => {
       if (serviceRef.current) {
         serviceRef.current.scrollIntoView({ behavior: "smooth" });
@@ -19,14 +19,15 @@ const HomePage = forwardRef((props, ref) => {
   }));
 
   useEffect(() => {
-    axios.get(`${import.meta.env.VITE_API_BASE_URL}/home`) 
-    .then(res => {
-      
-      setSectionData(res.data)})
+    axios.get(`${import.meta.env.VITE_API_BASE_URL}/home`)
+      .then(res => {
+
+        setSectionData(res.data)
+      })
       .catch(err => console.error("Failed to load home section", err));
   }, []);
-  
-    
+
+
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     if (params.get("section") === "service" && serviceRef.current) {
@@ -34,15 +35,23 @@ const HomePage = forwardRef((props, ref) => {
     }
   }, [location, sectionData]);
 
-  
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      once: true,
+      easing: 'ease-in-out',
+    });
+  }, []);
+
+
+
   if (!sectionData) return <div className="text-center p-10">Loading...</div>;
 
-  
+
   const ShapeDivider = ({ fill = "#ffffff", flip = false }) => (
     <div
-      className={`w-full overflow-hidden leading-[0] ${
-        flip ? "rotate-180" : ""
-      }`}
+      className={`w-full overflow-hidden leading-[0] ${flip ? "rotate-180" : ""
+        }`}
     >
       <svg
         className="block w-[300%] h-[25px] relative"
@@ -58,10 +67,13 @@ const HomePage = forwardRef((props, ref) => {
     </div>
   );
 
+
+
+
   return (
     <>
-      <div className="font-sans">
-        <section className="relative bg-[#FBF3B9] ">
+      <div>
+        <section className="relative bg-[#FBF3B9] "   data-aos="fade-up">
           <ShapeDivider fill="#ffffff" />
           <div className="py-16 px-4 text-center bg-[#FBF3B9] ">
             <div className="max-w-7xl mx-auto">
@@ -71,26 +83,27 @@ const HomePage = forwardRef((props, ref) => {
                   textShadow: `0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green`,
                 }}
               >
-                 {sectionData.sectionTitle}
+                {sectionData.sectionTitle}
               </h2>
-              <p className="text-gray-900 max-w-2xl mx-auto mb-12 text-center">
+              <p className="text-gray-900 max-w-2xl mx-auto mb-12 text-center font-semibold">
                 {sectionData.subtitle}
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                 {sectionData.cards.map((card, idx) => (
-              <div key={idx} className="max-w-[300px] mx-auto">
-                <img
-                  src={card.image}
-                  alt={card.title}
-                  className="w-full h-48 rounded-2xl object-cover hover:scale-105 transition-transform"
-                />
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2 text-gray-900">{card.title}</h3>
-                  <p className="text-gray-600 text-sm">{card.description}</p>
-                </div>
-              </div>
-            ))}
+                {sectionData.cards.map((card, idx) => (
+                  <div key={idx} className="max-w-[300px] mx-auto">
+                    <img
+                      src={card.image}
+                      alt={card.title}
+                      data-aos="fade-up"
+                      className="w-full h-48 rounded-2xl object-cover hover:scale-105 transition-transform"
+                    />
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold mb-2 text-gray-900">{card.title}</h3>
+                      <p className="text-gray-900 text-sm font-semibold">{card.description}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

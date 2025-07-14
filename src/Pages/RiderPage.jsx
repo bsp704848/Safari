@@ -26,7 +26,9 @@ export default function RiderPage() {
       <div className="bg-white w-full max-w-sm rounded-2xl shadow-xl overflow-hidden border border-gray-200">
 
         <div className="bg-yellow-400 flex justify-center py-4">
-          <span className="text-3xl font-extrabold tracking-wide text-gray-900">
+          <span className="text-3xl font-extrabold tracking-wide text-gray-900"
+            style={{ fontFamily: 'Coiny', textShadow: `0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green` }}
+          >
             Safari
           </span>
         </div>

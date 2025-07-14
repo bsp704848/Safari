@@ -247,7 +247,7 @@ export default function RideBooking() {
             </div>
             <button
               onClick={handleBookRide}
-              className="bg-gray-900 text-white font-medium py-3 px-8 rounded-lg hover:rounded-full transition-all duration-300 ease-in-out shadow-lg"
+              className="py-3 px-8 duration-300 ease-in-out shadow-lg font-semibold  transition-all bg-black text-white rounded-full hover:bg-gray-800"
             >
               Book a Ride
             </button>
