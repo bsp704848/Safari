@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 
 export default function GoogleMapView({ pickupLocation, dropLocation, routePolyline, }) {
@@ -18,7 +19,8 @@ export default function GoogleMapView({ pickupLocation, dropLocation, routePolyl
 
   useEffect(() => {
    
-
+    if (!window.google || !mapInstance.current) return;
+    
     if (pickupMarkerRef.current) {
       pickupMarkerRef.current.setMap(null);
       pickupMarkerRef.current = null;
@@ -32,12 +34,17 @@ export default function GoogleMapView({ pickupLocation, dropLocation, routePolyl
       routePolylineRef.current = null;
     }
 
-    const geocoder = new window.google.maps.Geocoder();
+      const placesService = new window.google.maps.places.PlacesService(
+      mapInstance.current
+    );
 
-    const placeMarker = (address, title, icon, callback) => {
-      geocoder.geocode({ address }, (results, status) => {
-        if (status === 'OK' && results[0]) {
-          const position = results[0].geometry.location;
+    let pickupLatLng = null;
+    let dropLatLng = null;
+
+    const placeMarker = (placeId, title, icon, callback) => {
+      placesService.getDetails({ placeId }, (place, status) => {
+        if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+          const position =  place.geometry.location;
           const marker = new window.google.maps.Marker({
             map: mapInstance.current,
             position,
@@ -45,41 +52,67 @@ export default function GoogleMapView({ pickupLocation, dropLocation, routePolyl
             icon,
           });
           callback(position, marker);
+        } else {
+          console.error("PlacesService.getDetails failed:", status);
         }
       });
     };
 
-    let pickupLatLng = null;
-    let dropLatLng = null;
 
-    if (pickupLocation) {
-      placeMarker(
-        pickupLocation,
-        'Pickup Location',
-        null,
-        (pos, marker) => {
-          pickupLatLng = pos;
-          pickupMarkerRef.current = marker;
-          mapInstance.current.setCenter(pos);
-          mapInstance.current.setZoom(12);
-          fitBounds();
-        }
-      );
-    }
+  if (pickupLocation && pickupLocation.lat && pickupLocation.lng) {
+    const pickupPos = new window.google.maps.LatLng(
+      pickupLocation.lat,
+      pickupLocation.lng
+    );
+    pickupLatLng = pickupPos;
+    pickupMarkerRef.current = new window.google.maps.Marker({
+      map: mapInstance.current,
+      position: pickupPos,
+      title: pickupLocation.name,
+    });
+    mapInstance.current.setCenter(pickupPos);
+    mapInstance.current.setZoom(12);
+    fitBounds();
+  } else if (pickupLocation?.placeId) {
+    placeMarker(
+      pickupLocation.placeId,
+      'Pickup Location',
+      null,
+      (pos, marker) => {
+        pickupLatLng = pos;
+        pickupMarkerRef.current = marker;
+        mapInstance.current.setCenter(pos);
+        mapInstance.current.setZoom(12);
+        fitBounds();
+      }
+    );
+  }
 
-    if (dropLocation) {
-      placeMarker(
-        dropLocation,
-        'Drop Location',
-        'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
-        (pos, marker) => {
-          dropLatLng = pos;
-          dropMarkerRef.current = marker;
-          fitBounds();
-
-        }
-      );
-    }
+  if (dropLocation && dropLocation.lat && dropLocation.lng) {
+    const dropPos = new window.google.maps.LatLng(
+      dropLocation.lat,
+      dropLocation.lng
+    );
+    dropLatLng = dropPos;
+    dropMarkerRef.current = new window.google.maps.Marker({
+      map: mapInstance.current,
+      position: dropPos,
+      title: dropLocation.name,
+      icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
+    });
+    fitBounds();
+  } else if (dropLocation?.placeId) {
+    placeMarker(
+      dropLocation.placeId,
+      'Drop Location',
+      'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
+      (pos, marker) => {
+        dropLatLng = pos;
+        dropMarkerRef.current = marker;
+        fitBounds();
+      }
+    );
+  }
 
     function fitBounds() {
       if (pickupLatLng && dropLatLng) {
@@ -94,14 +127,14 @@ export default function GoogleMapView({ pickupLocation, dropLocation, routePolyl
       try{
       const decodedPath = window.google.maps.geometry.encoding.decodePath(routePolyline);
 
-      console.log("Drawing polyline:", routePolyline);
-      console.log("Decoded path:", decodedPath);
+      // console.log("Drawing polyline:", routePolyline);
+      // console.log("Decoded path:", decodedPath);
 
       routePolylineRef.current = new window.google.maps.Polyline({
         path: decodedPath,
         strokeColor: '#000000',
         strokeOpacity: 1.0,
-        strokeWeight: 3,
+        strokeWeight: 4,
         map: mapInstance.current,
       });
 

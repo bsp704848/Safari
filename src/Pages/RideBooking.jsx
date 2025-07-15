@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from "react";
 import Loader from "../Components/UI/Loader";
 import FareCalculator from "../Components/fareCalculator/FareCalculator";
@@ -76,13 +77,19 @@ export default function RideBooking() {
   const handlePickupSelect = (place) => {
     setPickupQuery(place.name);
     setPickupSuggestions([]);
-    setPickupLocation(place.name);
+    setPickupLocation({
+      name: place.name,
+      placeId: place.place_id,
+    });
   };
 
   const handleDropSelect = (place) => {
     setDropQuery(place.name);
     setDropSuggestions([]);
-    setDropLocation(place.name);
+    setDropLocation({
+      name: place.name,
+      placeId: place.place_id,
+    });
   };
 
   const handleBookRide = () => {
@@ -103,26 +110,74 @@ export default function RideBooking() {
       return;
     }
     const service = new window.google.maps.DirectionsService();
+
     service.route(
       {
-        origin: pickup,
-        destination: drop,
+        origin: { placeId: pickup.placeId },
+        destination: { placeId: drop.placeId },
         travelMode: window.google.maps.TravelMode.DRIVING,
       },
       (result, status) => {
+        // console.log("Directions status:", status);
+        // console.log("Directions result:", result);
         if (status === "OK") {
-          const meters = result.routes[0].legs[0].distance.value;
-          const km = meters / 1000;
-          setDistanceKm(km);
 
-          const polyline = result.routes[0].overview_polyline?.points;
+          const route = result.routes[0];
+
+          const overviewPolyline = route.overview_polyline?.points;
+
+          const steps = route.legs[0].steps;
+
+          let polyline = overviewPolyline;
+
+          if (!polyline) {
+            // console.log("No overview_polyline found. Reconstructing polyline from steps...");
+
+            let fullPath = [];
+
+            steps.forEach((step) => {
+              if (step.polyline?.points) {
+                const segmentPath = window.google.maps.geometry.encoding.decodePath(
+                  step.polyline.points
+                );
+                fullPath.push(...segmentPath);
+              }
+            });
+
+            if (fullPath.length > 0) {
+              polyline = window.google.maps.geometry.encoding.encodePath(fullPath);
+            } else {
+              polyline = null;
+            }
+          }
+
+
           if (polyline) {
-            console.log("Polyline",polyline);
-            
+            // console.log("Polyline", polyline);
             setRoutePolyline(polyline);
           }
-        } else {
-          alert("Could not calculate distance.");
+
+
+          const meters = route.legs[0].distance.value;
+          if (meters) {
+            setDistanceKm(meters / 1000);
+          }
+
+          const pickupLatLng = route.legs[0].start_location;
+          const dropLatLng = route.legs[0].end_location;
+
+          setPickupLocation({
+            name: pickup.name,
+            lat: pickupLatLng.lat(),
+            lng: pickupLatLng.lng(),
+          });
+          setDropLocation({
+            name: drop.name,
+            lat: dropLatLng.lat(),
+            lng: dropLatLng.lng(),
+          });
+
+
         }
       }
     );
@@ -137,7 +192,7 @@ export default function RideBooking() {
   };
 
   return (
-    <div className="font-sans min-h-screen mt-8">
+    <div className="min-h-screen mt-8">
       {loading && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/100">
           <Loader />

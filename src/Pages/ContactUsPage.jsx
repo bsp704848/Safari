@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Phone, Mail, Building, Building2 } from 'lucide-react';
@@ -9,14 +9,14 @@ import AOS from "aos";
 const ContactUs = () => {
 
 
-          useEffect(() => {
-            AOS.init({
-              duration: 800,
-              once: true,
-              easing: 'ease-in-out',
-            });
-          }, []);
-    
+    useEffect(() => {
+        AOS.init({
+            duration: 800,
+            once: true,
+            easing: 'ease-in-out',
+        });
+    }, []);
+
     const formik = useFormik({
         initialValues: {
             name: '',
@@ -49,15 +49,15 @@ const ContactUs = () => {
                 );
             }
         },
-    });  
+    });
 
     return (
         <div className="container mx-auto px-4 py-10">
 
             <div className="text-center mb-10">
                 <h1 className="text-4xl font-bold text-gray-800 mb-2" data-aos="fade-up"
-                  style={{
-                  textShadow: `0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green`,
+                    style={{
+                        textShadow: `0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green`,
                     }}>
                     About Our Office Locations
                 </h1>
@@ -65,8 +65,13 @@ const ContactUs = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
 
-                <div className="bg-white p-6 rounded-lg shadow-md"   data-aos="fade-right">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-4"><span className="flex items-center gap-2 mb-1"><Building />Office Address</span></h2>
+                <div className="bg-white p-6 rounded-lg shadow-md" data-aos="fade-right">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-4"><span className="flex items-center gap-2 mb-1"
+                        style={{
+                            textShadow: `0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green`,
+                        }}
+                    >
+                        <Building />Office Address</span></h2>
                     <p className="text-gray-700">
                         <strong>Safari Technologies Pvt. Ltd.</strong><br />
                         301, Sunrise Plaza, Near City Mall<br />
@@ -91,7 +96,12 @@ const ContactUs = () => {
 
 
                 <div className="bg-white p-6 rounded-lg shadow-md" data-aos="fade-left">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-4"><span className="flex items-center gap-2 mb-1"><Building2 />Office Address</span></h2>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-4"><span className="flex items-center gap-2 mb-1"
+                        style={{
+                            textShadow: `0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green`,
+                        }}
+                    >
+                        <Building2 />Office Address</span></h2>
                     <p className="text-gray-700 ">
                         <strong>Safari Technologies Pvt. Ltd. (Corporate Office)</strong><br />
                         18th Floor, Orbit Tower<br />
@@ -118,9 +128,9 @@ const ContactUs = () => {
 
             <div className="text-center mb-10">
                 <h1 className="text-4xl font-bold text-gray-800 mb-2" data-aos="fade-up"
-                  style={{
-                  textShadow: `0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green`,
-                }}
+                    style={{
+                        textShadow: `0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green`,
+                    }}
                 >Contact Us</h1>
                 <p className="text-gray-600 max-w-xl mx-auto" data-aos="fade-up">
                     We'd love to hear from you! Please fill out the form and we’ll get back to you as soon as possible.
@@ -132,7 +142,7 @@ const ContactUs = () => {
                     <form
                         onSubmit={formik.handleSubmit}
                         className="bg-white w-full md:max-w-xl p-8 rounded-lg shadow-lg"
-                      data-aos="fade-right">
+                        data-aos="fade-right">
 
                         <div className="mb-4">
                             <label htmlFor="name" className="block font-medium text-gray-700">
