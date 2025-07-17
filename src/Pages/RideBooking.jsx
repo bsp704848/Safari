@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect, } from "react";
 import Loader from "../Components/UI/Loader";
 import FareCalculator from "../Components/fareCalculator/FareCalculator";
 import backgroundImage from "../assets/images/background.png";
@@ -16,11 +16,18 @@ export default function RideBooking() {
   const [distanceKm, setDistanceKm] = useState(null);
   const [loading, setLoading] = useState(false);
   const [routePolyline, setRoutePolyline] = useState(null);
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
 
 
   const pickupDebounceRef = useRef();
   const dropDebounceRef = useRef();
   const suggestionsCache = useRef({});
+
+  function savePendingRide(data) {
+    const pendingRide = JSON.parse(localStorage.getItem("pendingRide")) || {};
+    const updatedRide = { ...pendingRide, ...data };
+    localStorage.setItem("pendingRide", JSON.stringify(updatedRide));
+  }
 
   const fetchSuggestions = (query, setSuggestions) => {
     if (query.length < 3) {
@@ -77,19 +84,33 @@ export default function RideBooking() {
   const handlePickupSelect = (place) => {
     setPickupQuery(place.name);
     setPickupSuggestions([]);
-    setPickupLocation({
+    const updatedPickup = {
       name: place.name,
       placeId: place.place_id,
+    };
+    setPickupLocation(updatedPickup);
+
+    savePendingRide({
+      pickupQuery: place.name,
+      pickupLocation: updatedPickup,
     });
+
   };
 
   const handleDropSelect = (place) => {
     setDropQuery(place.name);
     setDropSuggestions([]);
-    setDropLocation({
+    const updatedDrop = {
       name: place.name,
       placeId: place.place_id,
+    };
+    setDropLocation(updatedDrop);
+
+    savePendingRide({
+      dropQuery: place.name,
+      dropLocation: updatedDrop,
     });
+
   };
 
   const handleBookRide = () => {
@@ -118,8 +139,6 @@ export default function RideBooking() {
         travelMode: window.google.maps.TravelMode.DRIVING,
       },
       (result, status) => {
-        // console.log("Directions status:", status);
-        // console.log("Directions result:", result);
         if (status === "OK") {
 
           const route = result.routes[0];
@@ -131,7 +150,6 @@ export default function RideBooking() {
           let polyline = overviewPolyline;
 
           if (!polyline) {
-            // console.log("No overview_polyline found. Reconstructing polyline from steps...");
 
             let fullPath = [];
 
@@ -151,12 +169,9 @@ export default function RideBooking() {
             }
           }
 
-
           if (polyline) {
-            // console.log("Polyline", polyline);
             setRoutePolyline(polyline);
           }
-
 
           const meters = route.legs[0].distance.value;
           if (meters) {
@@ -166,18 +181,27 @@ export default function RideBooking() {
           const pickupLatLng = route.legs[0].start_location;
           const dropLatLng = route.legs[0].end_location;
 
-          setPickupLocation({
-            name: pickup.name,
+          const enrichedPickup = {
+            ...pickup,
             lat: pickupLatLng.lat(),
             lng: pickupLatLng.lng(),
-          });
-          setDropLocation({
-            name: drop.name,
+          };
+
+          const enrichedDrop = {
+            ...drop,
             lat: dropLatLng.lat(),
             lng: dropLatLng.lng(),
+          };
+
+          setPickupLocation(enrichedPickup);
+          setDropLocation(enrichedDrop);
+
+          savePendingRide({
+            pickupLocation: enrichedPickup,
+            dropLocation: enrichedDrop,
+            routePolyline: polyline,
+            distanceKm: meters / 1000,
           });
-
-
         }
       }
     );
@@ -189,7 +213,29 @@ export default function RideBooking() {
     setPickupQuery("");
     setDropQuery("");
     setDistanceKm(null);
+    setRoutePolyline(null);
+    localStorage.removeItem("pendingRide");
   };
+
+  useEffect(() => {
+    const pendingRide = JSON.parse(localStorage.getItem("pendingRide"));
+    if (pendingRide) {
+      setPickupQuery(pendingRide.pickupQuery || "");
+      setDropQuery(pendingRide.dropQuery || "");
+      setPickupLocation(pendingRide.pickupLocation || null);
+      setDropLocation(pendingRide.dropLocation || null);
+      setRoutePolyline(pendingRide.routePolyline || null);
+      setDistanceKm(pendingRide.distanceKm || null);
+      setSelectedVehicle(pendingRide.selectedVehicle || null)
+
+      if (pendingRide.pickupLocation && pendingRide.dropLocation) {
+        fetchDistance(
+          pendingRide.pickupLocation,
+          pendingRide.dropLocation
+        );
+      }
+    }
+  }, []);
 
   return (
     <div className="min-h-screen mt-8">
@@ -317,7 +363,7 @@ export default function RideBooking() {
         </div>
       </section>
       {!loading && distanceKm && (
-        <FareCalculator distanceKm={distanceKm} onClear={handleClearInputs} />
+        <FareCalculator distanceKm={distanceKm} onClear={handleClearInputs} defaultVehicle={selectedVehicle} />
       )}
     </div>
   );

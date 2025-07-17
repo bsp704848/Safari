@@ -10,8 +10,6 @@ export default function ServicePage() {
   const [data, setData] = useState(null);
   const navigate = useNavigate();
 
-
-
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_API_BASE_URL}/service`)
@@ -66,9 +64,7 @@ export default function ServicePage() {
   </div>
 );
 
-
   return (
-
 
     <div className="bg-white">
 
@@ -89,10 +85,9 @@ export default function ServicePage() {
         </div>
       </section>
 
-
-      <section className="mt-12 relative bg-[#FBF3B9]">
+      <section className="mt-12 relative bg-[#ffffe3]">
         <ShapeDivider fill=" #ffffff" />
-        <div className="bg-[#FBF3B9] py-12">
+        <div className="bg-[#ffffe3] py-12">
           <div className="max-w-6xl mx-auto px-4 space-y-40">
             {data?.features.map((feature, idx) => (
               <div
@@ -106,7 +101,7 @@ export default function ServicePage() {
                       key={i}
                       src={img}
                       alt=""
-                      className="rounded-xl w-full h-40 object-cover shadow-md hover:shadow-2xl transform transition-transform duration-500 hover:scale-105"
+                      className="rounded-lg w-full h-40 object-cover shadow-md hover:shadow-2xl transform transition-transform duration-500 hover:scale-105"
                     />
                   ))}
                 </div>

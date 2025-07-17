@@ -31,7 +31,6 @@ export default function Carousel({
     const scrollPrev = () => emblaApi && emblaApi.scrollPrev();
     const scrollNext = () => emblaApi && emblaApi.scrollNext(); 
 
-
     const slideWidthClass =
     slidesPerView === 1
       ? "w-full"

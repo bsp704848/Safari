@@ -4,18 +4,25 @@ import { RIDERS } from "../../data/riders";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-hot-toast';
 import Loader from "../UI/Loader";
+import { useAuthStore } from "../../store/useAuthStore";
 
 const VEHICLE_TYPE_MAP = {
   bike: "Bike",
   auto: "Rickshaw",
   cab: "Taxi",
-  "cab-premium": "Taxi", 
+  "cab-premium": "Taxi",
 };
 
-export default function FareCalculator({ distanceKm, onClear }) {
-  const [selectedVehicle, setSelectedVehicle] = useState(null);
-  const [loading, setLoading] = useState(false); 
+export default function FareCalculator({ distanceKm, pickupQuery,
+  dropQuery,
+  pickupLocation,
+  dropLocation,
+  routePolyline, onClear, defaultVehicle }) {
+  const [selectedVehicle, setSelectedVehicle] = useState(defaultVehicle || null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const user = useAuthStore((state) => state.user);
+
 
   const fares = VEHICLES.map((vehicle) => {
     const minFare = (distanceKm * vehicle.minFarePerKm).toFixed(2);
@@ -29,9 +36,27 @@ export default function FareCalculator({ distanceKm, onClear }) {
   const handleContinue = (vehicle) => {
     if (!vehicle) {
       toast.error("Please select a vehicle!");
+      navigate('/login')
       return;
     }
-    setLoading(true); 
+
+
+    if (!user) {
+      const existingPendingRide = JSON.parse(localStorage.getItem("pendingRide")) || {};
+      localStorage.setItem("pendingRide", JSON.stringify({
+        ...existingPendingRide,
+        selectedVehicle: vehicle
+      }));
+
+
+      localStorage.setItem("lastPage", "/book-ride");
+
+      toast.error("Please log in to continue.");
+      navigate("/login");
+      return;
+    }
+
+    setLoading(true);
     setTimeout(() => {
       const riderType = VEHICLE_TYPE_MAP[vehicle.type];
       const filteredRiders = RIDERS.filter(rider => rider.vehicleType.toLowerCase() === riderType.toLowerCase());
@@ -41,6 +66,19 @@ export default function FareCalculator({ distanceKm, onClear }) {
           const fallbackRider = RIDERS[Math.floor(Math.random() * RIDERS.length)];
           toast.error("No exact match for selected vehicle type. Assigning a random available rider.");
           navigate("/rider", { state: { rider: fallbackRider, vehicle } });
+
+          const pendingRide = JSON.parse(localStorage.getItem("pendingRide")) || {};
+          localStorage.setItem("pendingRide", JSON.stringify({
+            ...pendingRide,
+            distanceKm,
+            pickupQuery,
+            dropQuery,
+            pickupLocation,
+            dropLocation,
+            routePolyline,
+            selectedVehicle: vehicle,
+          }));
+
           if (typeof onClear === "function") onClear();
           setLoading(false);
           return;
@@ -57,18 +95,18 @@ export default function FareCalculator({ distanceKm, onClear }) {
       navigate("/rider", { state: { rider, vehicle } });
       if (typeof onClear === "function") onClear();
       setLoading(false);
-    }, 2000); 
+    }, 2000);
   };
 
   if (!distanceKm) return null;
 
   return (
     <section className="max-w-6xl mx-auto px-4 py-8 text-black">
-     {loading && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/100">
-                        <Loader />
-                    </div>
-                )}
+      {loading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/100">
+          <Loader />
+        </div>
+      )}
       <h2 className="text-xl md:text-2xl font-bold mb-6 text-center">
         Estimated Fares for {distanceKm.toFixed(2)} km
       </h2>

@@ -25,7 +25,8 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="md:col-span-1 flex flex-col items-start">
           <h1 className="text-4xl font-bold mb-4 text-black px-4 py-2 hover:cursor-pointer" onClick={() => navigate("/")}
-          style={{fontFamily:'Coiny', textShadow: `0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green`}}>
+          style={{ textShadow: `0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green`}}
+          >
             Safari
           </h1>
           <p className="text-black-200 mb-4 text-sm leading-relaxed">

@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import { toast } from 'react-hot-toast';
 import { FaFacebook, FaGoogle } from 'react-icons/fa';
 import Loader from "../Components/UI/Loader";
+import SocialLoginButtons from "../Components/auth/SocialLoginButtons";
 
 const RegisterSchema = Yup.object().shape({
   username: Yup.string().required('Username is required'),
@@ -74,7 +75,8 @@ export default function RegisterPage() {
 
       <div className="hidden md:flex w-1/2 items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
         <div className="text-center p-10">
-          <h1 className="text-black text-3xl bg-yellow-300 rounded-3xl inline-block px-4 py-2 font-bold">
+          <h1 className="text-black text-5xl inline-block font-bold"
+            style={{ textShadow: `0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green` }}>
             Safari
           </h1>
           <h2 className="text-2xl font-semibold text-gray-700 mt-4">
@@ -184,17 +186,9 @@ export default function RegisterPage() {
             <div className="flex-grow border-t border-gray-300"></div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-2 gap-1">
-            <button className="flex items-center justify-center  transition">
-              <span className="text-blue-600 font-semibold">
-                <FaFacebook className="w-8 h-8" />
-              </span>
-            </button>
-            <button className="flex items-center justify-center transition">
-              <span className="text-blue-600 font-semibold">
-                <FaGoogle className="w-8 h-8" />
-              </span>
-            </button>
+
+          <div className="mt-6">
+            <SocialLoginButtons />
           </div>
         </div>
       </div>

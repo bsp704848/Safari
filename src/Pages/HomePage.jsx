@@ -4,7 +4,6 @@ import { useLocation } from "react-router-dom";
 import ServicePage from "../Pages/ServicePage";
 import AOS from "aos";
 
-
 const HomePage = forwardRef((props, ref) => {
   const serviceRef = useRef(null);
   const location = useLocation();
@@ -27,7 +26,6 @@ const HomePage = forwardRef((props, ref) => {
       .catch(err => console.error("Failed to load home section", err));
   }, []);
 
-
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     if (params.get("section") === "service" && serviceRef.current) {
@@ -43,10 +41,7 @@ const HomePage = forwardRef((props, ref) => {
     });
   }, []);
 
-
-
   if (!sectionData) return <div className="text-center p-10">Loading...</div>;
-
 
   const ShapeDivider = ({ fill = "#ffffff", flip = false }) => (
     <div
@@ -67,15 +62,12 @@ const HomePage = forwardRef((props, ref) => {
     </div>
   );
 
-
-
-
   return (
     <>
       <div>
-        <section className="relative bg-[#FBF3B9] "   data-aos="fade-up">
+        <section className="relative bg-[#ffffe3] "   data-aos="fade-up">
           <ShapeDivider fill="#ffffff" />
-          <div className="py-16 px-4 text-center bg-[#FBF3B9] ">
+          <div className="py-16 px-4 text-center bg-[#ffffe3] ">
             <div className="max-w-7xl mx-auto">
               <h2
                 className="text-3xl md:text-4xl font-bold mb-6 text-center text-black"
@@ -96,7 +88,7 @@ const HomePage = forwardRef((props, ref) => {
                       src={card.image}
                       alt={card.title}
                       data-aos="fade-up"
-                      className="w-full h-48 rounded-2xl object-cover hover:scale-105 transition-transform"
+                      className="w-full h-48 rounded-lg object-cover hover:scale-105 transition-transform"
                     />
                     <div className="p-6">
                       <h3 className="text-xl font-bold mb-2 text-gray-900">{card.title}</h3>

@@ -1,20 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthStore";
 import { Link, useNavigate } from "react-router-dom";
+import ProfilePage from "../../Pages/ProfilePage";
 
 export default function Navbar({ onServiceClick }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
   const user = useAuthStore((state) => state.user)
-  const logout = useAuthStore((state) => state.logout);
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
-    setDropdownOpen(false);
-    navigate("/login");
-  };
+
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const navItems = [
     {
@@ -40,11 +49,10 @@ export default function Navbar({ onServiceClick }) {
 
           <div className="flex-shrink-0 text-4xl font-bold text-black rounded-full px-4 py-1 hover:cursor-pointer"
             onClick={() => navigate("/")}
-            style={{ fontFamily: 'Coiny', textShadow: `0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green` }}
+            style={{ textShadow: `0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green` }}
           >
             Safari
           </div>
-
 
           <div className="hidden md:flex space-x-8 ">
             {navItems.map((item) => (
@@ -73,13 +81,10 @@ export default function Navbar({ onServiceClick }) {
                 </button>
 
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-50">
-                    <button
-                      onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                    >
-                      Logout
-                    </button>
+                  <div
+                    ref={dropdownRef}
+                    className="absolute right-0 mt-2 w-72 bg-white rounded-md shadow-lg p-4 z-50">
+                    <ProfilePage />
                   </div>
                 )}
               </div>
@@ -166,12 +171,12 @@ export default function Navbar({ onServiceClick }) {
                   </button>
 
                   {dropdownOpen && (
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100"
+                    <div
+                      ref={dropdownRef}
+                      className="mt-2 bg-gray-50 rounded-md p-4 w-full"
                     >
-                      Logout
-                    </button>
+                      <ProfilePage />
+                    </div>
                   )}
                 </div>
               ) : (

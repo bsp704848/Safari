@@ -22,20 +22,19 @@ export default function RiderPage() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-orange-50 to-yellow-100 p-4">
+    <div className="flex justify-center items-center min-h-screen p-4">
       <div className="bg-white w-full max-w-sm rounded-2xl shadow-xl overflow-hidden border border-gray-200">
 
-        <div className="bg-yellow-400 flex justify-center py-4">
-          <span className="text-3xl font-extrabold tracking-wide text-gray-900"
-            style={{ fontFamily: 'Coiny', textShadow: `0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green` }}
+        <div className="bg-gray-900 flex justify-center py-4">
+          <span className="text-3xl font-extrabold tracking-wide text-white"
+            style={{ textShadow: `0.0625em 0.0625em 0 gray,0.0875em 0.0875em 0 green` }}
           >
             Safari
           </span>
         </div>
 
-
         <div className="flex justify-center mt-6">
-          <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-yellow-400 shadow-lg">
+          <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-gray-900 shadow-lg">
             <img
               src={rider.photo}
               alt={rider.name}
@@ -43,7 +42,6 @@ export default function RiderPage() {
             />
           </div>
         </div>
-
 
         <div className="px-6 py-4 text-center">
           <h2 className="text-xl md:text-2xl font-bold text-gray-900">
@@ -81,7 +79,7 @@ export default function RiderPage() {
 
           <button
             onClick={() => navigate("/")}
-            className="w-full mt-6 py-3 bg-yellow-400 text-gray-900 font-semibold rounded-lg hover:bg-yellow-500 transition-all duration-300"
+            className="w-full mt-6 py-3 bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-700 transition-all duration-300"
           >
             Back Home
           </button>

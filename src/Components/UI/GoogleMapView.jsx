@@ -127,9 +127,6 @@ export default function GoogleMapView({ pickupLocation, dropLocation, routePolyl
       try{
       const decodedPath = window.google.maps.geometry.encoding.decodePath(routePolyline);
 
-      // console.log("Drawing polyline:", routePolyline);
-      // console.log("Decoded path:", decodedPath);
-
       routePolylineRef.current = new window.google.maps.Polyline({
         path: decodedPath,
         strokeColor: '#000000',

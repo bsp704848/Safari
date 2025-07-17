@@ -8,7 +8,6 @@ export default function AboutPage() {
 
   const [data, setData] = useState(null);
 
-
   useEffect(() => {
     axios
       .get(`${import.meta.env.VITE_API_BASE_URL}/about`)
@@ -25,8 +24,6 @@ export default function AboutPage() {
       }, []);
 
   if (!data) return <div className="p-10 text-center">Loading...</div>;
-
-
 
   const ShapeDivider = ({ fill = "#ffffff", flip = false }) => (
     <div
@@ -48,7 +45,7 @@ export default function AboutPage() {
   );
 
   return (
-    <div className="bg-[#fbf3b9] text-gray-900">
+    <div className="bg-[#ffffe3] text-gray-900">
       <ShapeDivider fill="#ffffff" />
       <div className=" text-gray-900">
         <div className="max-w-6xl mx-auto px-4 py-16 text-center">
@@ -70,7 +67,7 @@ export default function AboutPage() {
         </div>
       </div>
 
-      <div className="bg-[#fbf3b9] text-gray-900">
+      <div className="bg-[#ffffe3] text-gray-900">
         <div className="max-w-6xl mx-auto px-4 py-16">
           <h2
             className="text-3xl md:text-5xl font-bold mb-8 text-center"
@@ -79,7 +76,7 @@ export default function AboutPage() {
                 "0.0625em 0.0625em 0 white,0.0875em 0.0875em 0 green",
             }}
            data-aos="fade-up">
-            Why Safari?
+            Why Safari ?
           </h2>
           <div className="grid md:grid-cols-3 gap-8"  data-aos="fade-up">
             {data.whySafari.map((item, idx) => (
@@ -91,7 +88,7 @@ export default function AboutPage() {
         </div>
       </div>
 
-      <div className="bg-[#fbf3b9]">
+      <div className="bg-[#ffffe3]">
         <section className="max-w-6xl mx-auto px-4 py-16">
           <h2
             className="text-3xl md:text-5xl font-bold mb-8 text-center"
@@ -106,7 +103,7 @@ export default function AboutPage() {
             items={data.successStories || []}
             slidesPerView={3}
             renderItem={(story) => (
-              <div className="bg-white text-black p-6 hover:scale-105 transition-transform h-full flex flex-col  items-center justify-center rounded-tr-2xl rounded-bl-2xl border-r-8 border-b-8 border-black" >
+              <div className="bg-[#f1f6e9] text-black p-6 hover:scale-105 transition-transform h-full flex flex-col  items-center justify-center rounded-tr-2xl rounded-bl-2xl border-r-8 border-b-8 border-black" >
                 <img
                   src={story.photo}
                   alt={story.name}
@@ -124,7 +121,7 @@ export default function AboutPage() {
         </section>
       </div>
 
-      <div className="bg-[#fbf3b9]">
+      <div className="bg-[#ffffe3]">
         <section className="max-w-6xl mx-auto px-4 py-16">
           <h2
             className="text-3xl md:text-5xl font-bold mb-8 text-center"

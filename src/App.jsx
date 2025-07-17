@@ -1,4 +1,4 @@
-import React,{useRef} from 'react'
+import React, { useRef } from 'react'
 import { Toaster } from 'react-hot-toast'
 import LoginPage from "./Pages/LoginPage"
 import RegisterPage from "./Pages/RegisterPage"
@@ -11,8 +11,7 @@ import Mainlayout from "./Components/UI/Mainlayout"
 import ContactUsPage from './Pages/ContactUsPage'
 
 function App() {
-   const homePageRef = useRef(null);
-
+  const homePageRef = useRef(null);
   const handleScrollToService = () => {
     homePageRef.current?.scrollToService();
   };
@@ -20,13 +19,13 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Mainlayout scrollToService={handleScrollToService}><HomePage  ref={homePageRef} /></Mainlayout>} />
-        <Route path="/login" element={<LoginPage />}/>
-        <Route path="/register" element={<RegisterPage />}/>
-        <Route path="/contact" element={<Mainlayout scrollToService={handleScrollToService}><ContactUsPage /></Mainlayout>}/>
-        <Route path="/about" element={<Mainlayout scrollToService={handleScrollToService}><AboutPage /></Mainlayout>}/>
-        <Route path="/rider" element={<Mainlayout scrollToService={handleScrollToService}><RiderPage /></Mainlayout>}/>
-        <Route path="/book-ride" element={<Mainlayout scrollToService={handleScrollToService}><RideBooking /></Mainlayout>}/>
+        <Route path="/" element={<Mainlayout scrollToService={handleScrollToService}><HomePage ref={homePageRef} /></Mainlayout>} />
+        <Route path="/login" element={<Mainlayout scrollToService={handleScrollToService}><LoginPage /></Mainlayout>} />
+        <Route path="/register" element={<Mainlayout scrollToService={handleScrollToService}><RegisterPage /></Mainlayout>} />
+        <Route path="/contact" element={<Mainlayout scrollToService={handleScrollToService}><ContactUsPage /></Mainlayout>} />
+        <Route path="/about" element={<Mainlayout scrollToService={handleScrollToService}><AboutPage /></Mainlayout>} />
+        <Route path="/rider" element={<Mainlayout scrollToService={handleScrollToService}><RiderPage /></Mainlayout>} />
+        <Route path="/book-ride" element={<Mainlayout scrollToService={handleScrollToService}><RideBooking /></Mainlayout>} />
       </Routes>
       <Toaster
         position="top-center"

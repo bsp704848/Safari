@@ -8,7 +8,6 @@ import AOS from "aos";
 
 const ContactUs = () => {
 
-
     useEffect(() => {
         AOS.init({
             duration: 800,
@@ -28,8 +27,9 @@ const ContactUs = () => {
             name: Yup.string().required('Name is required'),
             email: Yup.string().email('Invalid email').required('Email is required'),
             mobile: Yup.string()
-                .matches(/^[0-9]{10}$/, 'Mobile number must be 10 digits')
+                .matches(/^[6-9]\d{9}$/, 'Enter a valid 10-digit Indian mobile number')
                 .required('Mobile number is required'),
+
             comment: Yup.string().required('Please enter a comment'),
         }),
         onSubmit: async (values, { resetForm }) => {
@@ -94,7 +94,6 @@ const ContactUs = () => {
                     </p>
                 </div>
 
-
                 <div className="bg-white p-6 rounded-lg shadow-md" data-aos="fade-left">
                     <h2 className="text-2xl font-bold text-gray-800 mb-4"><span className="flex items-center gap-2 mb-1"
                         style={{
@@ -124,7 +123,6 @@ const ContactUs = () => {
                     </p>
                 </div>
             </div>
-
 
             <div className="text-center mb-10">
                 <h1 className="text-4xl font-bold text-gray-800 mb-2" data-aos="fade-up"
@@ -159,7 +157,6 @@ const ContactUs = () => {
                             )}
                         </div>
 
-
                         <div className="mb-4">
                             <label htmlFor="email" className="block font-medium text-gray-700">
                                 Email
@@ -174,7 +171,6 @@ const ContactUs = () => {
                                 <p className="text-red-500 text-sm mt-1">{formik.errors.email}</p>
                             )}
                         </div>
-
 
                         <div className="mb-4">
                             <label htmlFor="mobile" className="block font-medium text-gray-700">
@@ -192,7 +188,6 @@ const ContactUs = () => {
                             )}
                         </div>
 
-
                         <div className="mb-4">
                             <label htmlFor="comment" className="block font-medium text-gray-700">
                                 Comment
@@ -208,7 +203,6 @@ const ContactUs = () => {
                             )}
                         </div>
 
-
                         <button
                             type="submit"
                             className="font-semibold py-2 px-6 transition-all duration-200 bg-black text-white rounded-full hover:bg-gray-800"
@@ -217,7 +211,6 @@ const ContactUs = () => {
                         </button>
                     </form>
                 </div>
-
 
                 <div className="hidden md:flex items-center justify-center" data-aos="fade-left">
                     <img
